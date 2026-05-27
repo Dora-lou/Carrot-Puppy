@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>胡萝卜狗狗：像素平台跳跃</title>
+    <link rel="stylesheet" href="./styles.css?v=10levels2" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand__title">胡萝卜狗狗</span>
+          <span class="brand__sub">类马里奥平台跳跃（HTML/CSS/JS）</span>
+        </div>
+        <div class="hud">
+          <div class="hud__item">金币：<span id="coins">0</span></div>
+          <div class="hud__item">生命：<span id="lives">3</span></div>
+          <div class="hud__item">关卡：<span id="level">1</span></div>
+        </div>
+      </header>
+
+      <section class="stage">
+        <canvas id="game" width="960" height="540" aria-label="游戏画布"></canvas>
+
+        <div class="touch" id="touch" aria-hidden="true">
+          <button class="touch__btn touch__btn--left" data-action="left" aria-label="向左">
+            ◀
+          </button>
+          <button class="touch__btn touch__btn--right" data-action="right" aria-label="向右">
+            ▶
+          </button>
+          <button class="touch__btn touch__btn--jump" data-action="jump" aria-label="跳跃">
+            ⤒
+          </button>
+        </div>
+
+        <div class="help" id="help">
+          <div class="help__panel">
+            <div class="help__title">操作说明</div>
+            <ul class="help__list">
+              <li><span class="k">←</span><span class="k">→</span> 移动</li>
+              <li><span class="k">↑</span> 或 <span class="k">Space</span> 跳跃（按住更高）</li>
+              <li><span class="k">N</span> 下一关（通关后）</li>
+              <li>手机：底部触控按钮（左/右/跳）</li>
+              <li><span class="k">R</span> 重新开始</li>
+              <li><span class="k">P</span> 暂停/继续</li>
+            </ul>
+            <button id="startBtn" class="btn">开始游戏</button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="bottombar">
+        <div class="tip">
+          目标：吃金币，躲避/踩扁敌人，到达终点旗帜。
+        </div>
+      </footer>
+    </main>
+
+    <script src="./game.js?v=10levels2"></script>
+  </body>
+</html>

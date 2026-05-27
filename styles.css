@@ -1,0 +1,195 @@
+/* Pixel-ish UI */
+:root{
+  --bg: #0b1020;
+  --panel: #0f1733;
+  --panel2: #0c132b;
+  --text: #eaf0ff;
+  --muted: #a9b6e7;
+  --accent: #ffd24a;
+  --accent2: #6cf0c2;
+  --danger: #ff5f7a;
+  --shadow: rgba(0,0,0,.35);
+  --px: 2px;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  background:
+    radial-gradient(1200px 700px at 20% 15%, #1b2b62 0%, transparent 55%),
+    radial-gradient(900px 600px at 85% 30%, #0e4b55 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg), #070a14);
+  color:var(--text);
+  overscroll-behavior: none;
+}
+
+.shell{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 16px 22px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.topbar, .bottombar{
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px var(--shadow);
+  padding: 12px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.brand{ display:flex; flex-direction:column; gap:2px; }
+.brand__title{
+  font-weight: 800;
+  letter-spacing: .6px;
+}
+.brand__sub{ color: var(--muted); font-size: 12px; }
+
+.hud{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.hud__item{
+  background: rgba(10,16,35,.55);
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stage{
+  position:relative;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    radial-gradient(1200px 500px at 50% 20%, rgba(255,210,74,.10), transparent 60%);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 14px;
+  box-shadow: 0 18px 45px var(--shadow);
+  overflow:hidden;
+}
+
+.stage, canvas#game{
+  touch-action: none;
+}
+
+canvas#game{
+  display:block;
+  width:100%;
+  height:auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: linear-gradient(180deg, #7fd0ff 0%, #d8f4ff 46%, #9fe58f 46.1%, #66d067 100%);
+}
+
+.touch{
+  position:absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display:none;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  pointer-events:none;
+}
+.touch__btn{
+  pointer-events:auto;
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:none;
+  appearance:none;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(10,16,35,.55);
+  color: rgba(255,255,255,.95);
+  font-weight: 900;
+  font-size: 20px;
+  width: 72px;
+  height: 56px;
+  border-radius: 14px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.28);
+  backdrop-filter: blur(6px);
+}
+.touch__btn:active{
+  transform: translateY(1px);
+  background: rgba(10,16,35,.72);
+}
+.touch__btn--jump{
+  margin-left:auto;
+  width: 88px;
+}
+
+.help{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+}
+.help[hidden]{ display:none; }
+.help__panel{
+  width:min(520px, 92%);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px;
+  padding: 16px 16px 14px;
+  box-shadow: 0 22px 60px rgba(0,0,0,.5);
+}
+.help__title{
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: .4px;
+}
+.help__list{
+  margin: 10px 0 14px;
+  padding-left: 18px;
+  color: var(--text);
+  line-height: 1.8;
+}
+.k{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width: 34px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.12);
+  margin-right: 6px;
+  font-weight: 700;
+  font-size: 12px;
+}
+.btn{
+  appearance:none;
+  border: none;
+  cursor:pointer;
+  color:#1a1300;
+  font-weight: 900;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffe07b, #ffbe2e);
+  box-shadow: 0 10px 26px rgba(255,210,74,.22);
+}
+.btn:active{ transform: translateY(1px); }
+
+.bottombar .tip{ color: var(--muted); font-size: 12px; }
+
+@media (max-width: 700px){
+  .topbar{ flex-direction:column; align-items:flex-start; }
+  .hud{ justify-content:flex-start; }
+  .touch{ display:flex; }
+}
+
