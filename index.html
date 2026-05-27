@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>胡萝卜狗狗：像素平台跳跃</title>
-    <link rel="stylesheet" href="./styles.css?v=10levels2" />
+    <link rel="stylesheet" href="./styles.css?v=mobile1" />
   </head>
   <body>
     <main class="shell">
@@ -23,6 +23,13 @@
       <section class="stage">
         <canvas id="game" width="960" height="540" aria-label="游戏画布"></canvas>
 
+        <div class="rotate" id="rotate" aria-hidden="true">
+          <div class="rotate__panel">
+            <div class="rotate__title">建议横屏游玩</div>
+            <div class="rotate__sub">把手机横过来，画面更大更清晰。</div>
+          </div>
+        </div>
+
         <div class="touch" id="touch" aria-hidden="true">
           <button class="touch__btn touch__btn--left" data-action="left" aria-label="向左">
             ◀
@@ -33,6 +40,20 @@
           <button class="touch__btn touch__btn--jump" data-action="jump" aria-label="跳跃">
             ⤒
           </button>
+        </div>
+
+        <div class="modal" id="modal" hidden>
+          <div class="modal__panel" role="dialog" aria-modal="true" aria-label="关卡结束菜单">
+            <div class="modal__title" id="modalTitle">通关！</div>
+            <div class="modal__sub" id="modalSub">选择下一步</div>
+            <div class="modal__actions">
+              <button class="btn modal__btn" id="btnNext">下一关</button>
+              <button class="btn btn--ghost modal__btn" id="btnRetry">重开本关</button>
+            </div>
+            <div class="modal__actions modal__actions--secondary">
+              <button class="btn btn--ghost modal__btn" id="btnRestart">从第1关重开</button>
+            </div>
+          </div>
         </div>
 
         <div class="help" id="help">
@@ -58,6 +79,6 @@
       </footer>
     </main>
 
-    <script src="./game.js?v=10levels2"></script>
+    <script src="./game.js?v=mobile1"></script>
   </body>
 </html>

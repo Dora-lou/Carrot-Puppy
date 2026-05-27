@@ -10,6 +10,14 @@
   const help = document.getElementById("help");
   const startBtn = document.getElementById("startBtn");
   const touchEl = document.getElementById("touch");
+  const rotateEl = document.getElementById("rotate");
+  const modalEl = document.getElementById("modal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalSub = document.getElementById("modalSub");
+  const btnNext = document.getElementById("btnNext");
+  const btnRetry = document.getElementById("btnRetry");
+  const btnRestart = document.getElementById("btnRestart");
+  const btnClose = null;
 
   /** @param {number} v */
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -635,6 +643,7 @@
     help.hidden = true;
     clearKeys();
     clearTouch();
+    hideModal();
     state.running = true;
     state.paused = false;
     state.lastTs = 0;
@@ -648,6 +657,11 @@
     resetLevel({ keepStats: false, toLevelIndex: 0 });
     // Prevent stacking multiple RAF loops from repeated "start" clicks/keys.
     startLoop();
+
+    // Best-effort landscape lock (may be blocked without user gesture on some browsers).
+    try {
+      if (screen?.orientation?.lock) screen.orientation.lock("landscape").catch(() => {});
+    } catch {}
   }
 
   startBtn.addEventListener("click", startGame);
@@ -725,6 +739,12 @@
     }
     if (e.code === "KeyD") {
       state.debug = !state.debug;
+    }
+    // Debug convenience: Shift+W instantly win (to test mobile modal)
+    if (e.code === "KeyW" && e.shiftKey && state.debug) {
+      state.win = true;
+      state.paused = true;
+      showWinModal();
     }
     // Debug convenience: Shift+N skip to next level (only when debug enabled)
     if (e.code === "KeyN" && e.shiftKey && state.debug) {
@@ -963,6 +983,7 @@
     if (state.lives <= 0) {
       state.lose = true;
       state.paused = true;
+      showLoseModal();
     } else {
       // soft reset position if fell too far
       if (player.y > world.h) {
@@ -981,7 +1002,70 @@
     if (aabb(pr, level.goal)) {
       state.win = true;
       state.paused = true;
+      showWinModal();
     }
+  }
+
+  function isMobileLike() {
+    return matchMedia?.("(pointer: coarse)")?.matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  function updateRotateHint() {
+    if (!rotateEl) return;
+    if (!isMobileLike()) {
+      rotateEl.style.display = "none";
+      return;
+    }
+    const portrait = window.matchMedia?.("(orientation: portrait)")?.matches;
+    rotateEl.style.display = portrait ? "flex" : "none";
+  }
+
+  function showModal(title, sub, { canNext = false } = {}) {
+    if (!modalEl) return;
+    modalTitle.textContent = title;
+    modalSub.textContent = sub;
+    btnNext.style.display = canNext ? "" : "none";
+    modalEl.hidden = false;
+  }
+
+  function hideModal() {
+    if (!modalEl) return;
+    modalEl.hidden = true;
+  }
+
+  function showWinModal() {
+    const isLast = levelIndex === LEVELS.length - 1;
+    showModal(isLast ? "全部通关！" : "通关！", isLast ? "回到第 1 关，或重新开始" : "选择下一步", { canNext: true });
+  }
+
+  function showLoseModal() {
+    showModal("失败了…", "要重开本关，还是从第 1 关开始？", { canNext: false });
+  }
+
+  function nextLevel() {
+    const next = levelIndex + 1 < LEVELS.length ? levelIndex + 1 : 0;
+    resetLevel({ keepStats: true, toLevelIndex: next });
+    clearKeys();
+    startLoop();
+  }
+
+  function retryLevel() {
+    resetLevel({ keepStats: true, toLevelIndex: levelIndex });
+    clearKeys();
+    startLoop();
+  }
+
+  function restartAll() {
+    resetLevel({ keepStats: false, toLevelIndex: 0 });
+    clearKeys();
+    startLoop();
+  }
+
+  function initModalControls() {
+    if (!modalEl) return;
+    btnNext?.addEventListener("click", () => nextLevel());
+    btnRetry?.addEventListener("click", () => retryLevel());
+    btnRestart?.addEventListener("click", () => restartAll());
   }
 
   function update(dt) {
@@ -1283,16 +1367,19 @@
     for (const e of level.enemies) drawEnemy(e);
     drawPlayer();
 
-    if (state.paused && state.win) {
-      if (levelIndex === LEVELS.length - 1) {
-        drawOverlayText("全部通关！", "按 N 回到第 1 关（或按 R 重开）");
-      } else {
-        drawOverlayText("通关！", "按 N 下一关（或按 R 重开）");
+    // Desktop overlay text is helpful, but on mobile we use the modal.
+    if (!isMobileLike()) {
+      if (state.paused && state.win) {
+        if (levelIndex === LEVELS.length - 1) {
+          drawOverlayText("全部通关！", "按 N 回到第 1 关（或按 R 重开）");
+        } else {
+          drawOverlayText("通关！", "按 N 下一关（或按 R 重开）");
+        }
+      } else if (state.paused && state.lose) {
+        drawOverlayText("失败了…", "按 R 重新开始");
+      } else if (state.paused) {
+        drawOverlayText("暂停", "按 P 继续");
       }
-    } else if (state.paused && state.lose) {
-      drawOverlayText("失败了…", "按 R 重新开始");
-    } else if (state.paused) {
-      drawOverlayText("暂停", "按 P 继续");
     }
 
     if (state.debug) drawDebug();
@@ -1348,5 +1435,9 @@
   setupPixelScale();
   resetLevel({ keepStats: false, toLevelIndex: 0 });
   initTouchControls();
+  initModalControls();
+  updateRotateHint();
+  window.addEventListener("resize", updateRotateHint);
+  window.addEventListener("orientationchange", updateRotateHint);
 })();
 
