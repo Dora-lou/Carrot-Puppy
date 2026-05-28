@@ -582,6 +582,7 @@
 
   const goals = {
     requiredStomps: 3,
+    requiredCoinRatio: 0.6, // must be strictly greater than 60%
     stompsThisLevel: 0,
   };
 
@@ -1010,16 +1011,36 @@
   function checkGoal() {
     const pr = { x: player.x, y: player.y, w: player.w, h: player.h };
     if (aabb(pr, level.goal)) {
-      if (goals.stompsThisLevel >= goals.requiredStomps) {
+      const stompOk = goals.stompsThisLevel >= goals.requiredStomps;
+      const coinRatio = getCollectedCoinRatio();
+      const coinOk = coinRatio > goals.requiredCoinRatio;
+
+      if (stompOk && coinOk) {
         state.win = true;
         state.paused = true;
         showWinModal();
       } else {
-        // Not enough stomps yet: show a small hint via modal.
-        const left = goals.requiredStomps - goals.stompsThisLevel;
-        showModal("还不能通关", `还差 ${left} 个小怪没踩扁（需要 ${goals.requiredStomps} 个）`, { canNext: false });
+        const reasons = [];
+        if (!stompOk) {
+          const left = goals.requiredStomps - goals.stompsThisLevel;
+          reasons.push(`还差 ${left} 个小怪没踩扁（需要 ${goals.requiredStomps} 个）`);
+        }
+        if (!coinOk) {
+          reasons.push(`金币进度 ${(coinRatio * 100).toFixed(0)}%，需超过 ${(goals.requiredCoinRatio * 100).toFixed(0)}%`);
+        }
+        showModal("还不能通关", reasons.join("；"), { canNext: false });
       }
     }
+  }
+
+  function getCollectedCoinRatio() {
+    const total = level?.coins?.length ?? 0;
+    if (total <= 0) return 1;
+    let collected = 0;
+    for (const c of level.coins) {
+      if (c.collected) collected += 1;
+    }
+    return collected / total;
   }
 
   function isMobileLike() {
