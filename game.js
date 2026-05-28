@@ -1021,7 +1021,7 @@
           reasons.push(`还差 ${left} 个小怪没踩扁（需要 ${goals.requiredStomps} 个）`);
         }
         if (!coinOk) {
-          reasons.push(`金币进度 ${(coinRatio * 100).toFixed(0)}%，需超过 ${(goals.requiredCoinRatio * 100).toFixed(0)}%`);
+          reasons.push(`萝卜进度 ${(coinRatio * 100).toFixed(0)}%，需超过 ${(goals.requiredCoinRatio * 100).toFixed(0)}%`);
         }
         showModal("还不能通关", reasons.join("；"), { canNext: false });
       }
@@ -1062,7 +1062,7 @@
 
   function showWinModal() {
     const isLast = levelIndex === LEVELS.length - 1;
-    showModal(isLast ? "全部通关！" : "通关！", isLast ? "回到第 1 关，或重新开始" : "选择下一步", { canNext: true });
+    showModal("恭喜你！小萝卜狗狗！", isLast ? "已完成全部关卡，回到第 1 关或重新开始" : "选择下一步", { canNext: true });
   }
 
   function showLoseModal() {
@@ -1231,20 +1231,25 @@
       const bob = Math.sin(t) * 3;
       const x = Math.floor(c.x - camera.x);
       const y = Math.floor(c.y - camera.y + bob);
-      const r = c.r;
 
       ctx.save();
       ctx.translate(x, y);
-      const squeeze = 0.6 + 0.4 * Math.abs(Math.sin(t));
-      ctx.scale(squeeze, 1);
-      ctx.fillStyle = "#ffd24a";
+      // Draw collectible carrot (instead of coin)
+      const sway = Math.sin(t) * 0.12;
+      ctx.rotate(sway);
+      ctx.fillStyle = "#ff8b2e";
       ctx.beginPath();
-      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.moveTo(0, -12);
+      ctx.lineTo(8, 10);
+      ctx.lineTo(-8, 10);
+      ctx.closePath();
       ctx.fill();
-      ctx.fillStyle = "rgba(255,255,255,.45)";
-      ctx.beginPath();
-      ctx.arc(-4, -5, r * 0.35, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.fillStyle = "#ffb070";
+      ctx.fillRect(-2, -4, 3, 10);
+      ctx.fillStyle = "#35d07f";
+      ctx.fillRect(-6, -14, 4, 8);
+      ctx.fillRect(-1, -16, 4, 8);
+      ctx.fillRect(4, -14, 4, 8);
       ctx.restore();
     }
   }
