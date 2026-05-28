@@ -7,6 +7,7 @@
   const uiCoins = document.getElementById("coins");
   const uiLives = document.getElementById("lives");
   const uiLevel = document.getElementById("level");
+  const uiStomps = document.getElementById("stomps");
   const help = document.getElementById("help");
   const startBtn = document.getElementById("startBtn");
   const touchEl = document.getElementById("touch");
@@ -17,7 +18,7 @@
   const btnNext = document.getElementById("btnNext");
   const btnRetry = document.getElementById("btnRetry");
   const btnRestart = document.getElementById("btnRestart");
-  const btnClose = null;
+  const btnClose = document.getElementById("btnClose");
 
   /** @param {number} v */
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -579,6 +580,11 @@
     lastTs: 0,
   };
 
+  const goals = {
+    requiredStomps: 3,
+    stompsThisLevel: 0,
+  };
+
   let level = makeLevel1();
   let activeRunId = 0;
 
@@ -609,6 +615,8 @@
       state.lives = 3;
     }
     loadLevel(toLevelIndex);
+    goals.stompsThisLevel = 0;
+    if (uiStomps) uiStomps.textContent = String(goals.stompsThisLevel);
 
     state.win = false;
     state.lose = false;
@@ -962,6 +970,8 @@
         e.alive = false;
         e.stompedMs = 0;
         player.vy = -settings.stompBounce;
+        goals.stompsThisLevel += 1;
+        if (uiStomps) uiStomps.textContent = String(goals.stompsThisLevel);
         state.coins += 2; // reward
         uiCoins.textContent = String(state.coins);
       } else {
@@ -1000,9 +1010,15 @@
   function checkGoal() {
     const pr = { x: player.x, y: player.y, w: player.w, h: player.h };
     if (aabb(pr, level.goal)) {
-      state.win = true;
-      state.paused = true;
-      showWinModal();
+      if (goals.stompsThisLevel >= goals.requiredStomps) {
+        state.win = true;
+        state.paused = true;
+        showWinModal();
+      } else {
+        // Not enough stomps yet: show a small hint via modal.
+        const left = goals.requiredStomps - goals.stompsThisLevel;
+        showModal("还不能通关", `还差 ${left} 个小怪没踩扁（需要 ${goals.requiredStomps} 个）`, { canNext: false });
+      }
     }
   }
 
@@ -1066,6 +1082,7 @@
     btnNext?.addEventListener("click", () => nextLevel());
     btnRetry?.addEventListener("click", () => retryLevel());
     btnRestart?.addEventListener("click", () => restartAll());
+    btnClose?.addEventListener("click", () => hideModal());
   }
 
   function update(dt) {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>胡萝卜狗狗：像素平台跳跃</title>
-    <link rel="stylesheet" href="./styles.css?v=mobile2" />
+    <link rel="stylesheet" href="./styles.css?v=mobile3" />
   </head>
   <body>
     <main class="shell">
@@ -17,6 +17,7 @@
           <div class="hud__item">金币：<span id="coins">0</span></div>
           <div class="hud__item">生命：<span id="lives">3</span></div>
           <div class="hud__item">关卡：<span id="level">1</span></div>
+          <div class="hud__item">踩扁：<span id="stomps">0</span>/3</div>
         </div>
       </header>
 
@@ -52,6 +53,7 @@
             </div>
             <div class="modal__actions modal__actions--secondary">
               <button class="btn btn--ghost modal__btn" id="btnRestart">从第1关重开</button>
+              <button class="btn btn--ghost modal__btn" id="btnClose">继续</button>
             </div>
           </div>
         </div>
@@ -79,6 +81,6 @@
       </footer>
     </main>
 
-    <script src="./game.js?v=mobile2"></script>
+    <script src="./game.js?v=mobile3"></script>
   </body>
 </html>
