@@ -1066,7 +1066,7 @@
   }
 
   function showLoseModal() {
-    showModal("失败了…", "要重开本关，还是从第 1 关开始？", { canNext: false });
+    showModal("差一点点！小萝卜狗狗继续冲！", "要重开本关，还是从第 1 关开始？", { canNext: false });
   }
 
   function nextLevel() {
