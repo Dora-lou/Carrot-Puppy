@@ -666,11 +666,6 @@
     resetLevel({ keepStats: false, toLevelIndex: 0 });
     // Prevent stacking multiple RAF loops from repeated "start" clicks/keys.
     startLoop();
-
-    // Best-effort landscape lock (may be blocked without user gesture on some browsers).
-    try {
-      if (screen?.orientation?.lock) screen.orientation.lock("landscape").catch(() => {});
-    } catch {}
   }
 
   startBtn.addEventListener("click", startGame);
@@ -1049,12 +1044,7 @@
 
   function updateRotateHint() {
     if (!rotateEl) return;
-    if (!isMobileLike()) {
-      rotateEl.style.display = "none";
-      return;
-    }
-    const portrait = window.matchMedia?.("(orientation: portrait)")?.matches;
-    rotateEl.style.display = portrait ? "flex" : "none";
+    rotateEl.style.display = "none";
   }
 
   function showModal(title, sub, { canNext = false } = {}) {
