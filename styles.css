@@ -10,6 +10,10 @@
   --danger: #ff5f7a;
   --shadow: rgba(0,0,0,.35);
   --px: 2px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
 }
 
 *{ box-sizing:border-box; }
@@ -36,6 +40,10 @@ body{
   display:flex;
   flex-direction:column;
   gap:12px;
+  padding-left: calc(12px + var(--safe-l));
+  padding-right: calc(12px + var(--safe-r));
+  padding-top: calc(14px + var(--safe-t));
+  padding-bottom: calc(18px + var(--safe-b));
 }
 
 .topbar, .bottombar{
@@ -122,6 +130,10 @@ body{
   padding: 14px 14px 12px;
   box-shadow: 0 22px 60px rgba(0,0,0,.55);
 }
+.modal__panel{
+  margin-left: var(--safe-l);
+  margin-right: var(--safe-r);
+}
 .modal__title{
   font-weight: 950;
   letter-spacing: .4px;
@@ -156,9 +168,9 @@ canvas#game{
 
 .touch{
   position:absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
+  left: calc(12px + var(--safe-l));
+  right: calc(12px + var(--safe-r));
+  bottom: calc(12px + var(--safe-b));
   display:none;
   gap:10px;
   align-items:center;
@@ -260,7 +272,6 @@ canvas#game{
 @media (max-width: 700px){
   .topbar{ flex-direction:column; align-items:flex-start; }
   .hud{ justify-content:flex-start; }
-  .touch{ display:flex; }
   .hud__item{ font-size: 16px; padding: 10px 12px; border-radius: 14px; }
   .brand__title{ font-size: 18px; }
   .brand__sub{ font-size: 13px; }
@@ -285,6 +296,15 @@ canvas#game{
     text-shadow: 0 1px 0 rgba(0,0,0,.25);
   }
   .stage{ border-radius: 16px; }
-  .touch{ bottom: 10px; left: 10px; right: 10px; }
+  .touch{
+    bottom: calc(10px + var(--safe-b));
+    left: calc(10px + var(--safe-l));
+    right: calc(10px + var(--safe-r));
+  }
+}
+
+/* show touch controls on touch devices (even landscape) */
+@media (pointer: coarse){
+  .touch{ display:flex; }
 }
 
